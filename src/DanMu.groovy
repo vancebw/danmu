@@ -35,12 +35,6 @@ void connectAndRead(host, port, room) {
     }
 }
 
-
-boolean isOnline(roomUrl) {
-    String pageHtml = HttpUtil.get(roomUrl);
-    return pageHtml != null && ResponseParser.parseOnline(pageHtml);
-}
-
 String[] splitResponse(byte[] buffer) {
     if (buffer == null || buffer.length <= 0) return null
 

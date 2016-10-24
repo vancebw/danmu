@@ -1,11 +1,14 @@
 def PORT = 8601
 def HOST = "danmu.douyutv.com"
-def ROOM = "525"
+def ROOM = "229346"
 
+def names = [] as Set
+def file = new File('E:/', 'Example.txt')
+file.append '房间号: ' + ROOM + '\n'
 
-connectAndRead(HOST, PORT, ROOM)
+connectAndRead(HOST, PORT, ROOM, names, file)
 
-void connectAndRead(host, port, room) {
+void connectAndRead(host, port, room, names, file) {
     def socket = new Socket(host, port)
     socket.setKeepAlive(true)
 
@@ -23,7 +26,10 @@ void connectAndRead(host, port, room) {
             content.each {
                 def matcher = it =~ regex
                 if (matcher) {
-                    println matcher[0][3] + "(lv:" + matcher[0][6] + ")" + ": " + matcher[0][4]
+                    names.add(matcher[0][3]);
+                    def text = new Date().format('yyyy-MM-dd HH:mm:ss') + '  人数: ' + names.size() + '      ' + matcher[0][3] + '(lv:' + matcher[0][6] + ')' + ': ' + matcher[0][4]
+                    file.append text + '\n'
+                    println text
                 }
             }
 
@@ -31,7 +37,7 @@ void connectAndRead(host, port, room) {
     }
 
     if (!socket.isConnected() || socket.isClosed()) {
-        connectAndRead(host, port, room)
+        connectAndRead(host, port, room, names, file)
     }
 }
 
